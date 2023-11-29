@@ -1,0 +1,92 @@
+version: "3"
+
+services:
+    hh-db:
+      container_name: hh-db
+      image: mysql/mysql-server:8.0
+      restart: always
+      ports:
+        - '3327:3306'
+      environment:
+            MYSQL_USER: "${DB_USERNAME}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      volumes:
+        - ./docker/db/:/var/lib/mysql
+ 
+      networks:
+        - hh-test
+
+
+    hh-nginx:
+      depends_on:
+        - hh-fpm
+      networks:
+        - hh-test
+      build:
+        context: ./
+        dockerfile: docker/nginx.docker
+      volumes:
+        - ./:/var/www
+      ports:
+        - "448:443"
+        - "88:80"
+
+
+
+    hh-fpm:
+      depends_on:
+        - hh-db
+      networks:
+        - hh-test
+      build:
+        context: ./
+        args:
+          USER_ID: ${USER_ID:-0}
+          GROUP_ID: ${GROUP_ID:-0}
+        dockerfile: docker/php-fpm.docker
+      volumes:
+        - ./:/var/www
+      environment:
+        - "DB_PORT=3306"
+        - "DB_HOST=hh-db"
+
+
+    hh-adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 5067:8080
+      networks:
+        - hh-test
+
+    hh-cli:
+      container_name: hh-cli
+      restart: always
+      build:
+        context: ./
+        args:
+          USER_ID: ${USER_ID:-0}
+          GROUP_ID: ${GROUP_ID:-0}
+        dockerfile: php-cli.docker
+      volumes:
+          - ./:/var/www
+          - ./docker/composer:/var/composer
+      tty: true
+      environment:
+          - "DB_PORT=3306"
+          - "DB_HOST=hh-db"
+          - "COMPOSER_MEMORY_LIMIT=-1"
+      depends_on:
+          - hh-db
+      networks:
+          - hh-test
+      ports:
+        - "7010:8000"
+
+
+
+networks:
+    hh-test:
+        driver: bridge

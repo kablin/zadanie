@@ -36,5 +36,8 @@ build: docker-build
 
 
 php:
-	docker compose  exec spt-cli bash
+	docker compose  exec hh-cli bash
+
+sql:
+	docker compose  exec hh-db bash
 

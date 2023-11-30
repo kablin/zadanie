@@ -1,4 +1,12 @@
 <?php
+require('user.php');
+
+session_start();
+$user = new User;
+$userdata = $user->findUserBySession();
+
+print_r($userdata);
+
 require_once('header.php');
 
 ?>
@@ -70,6 +78,7 @@ require_once('header.php');
     </div>
 
 </div>
+
 
 
 

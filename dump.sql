@@ -15,11 +15,13 @@ CREATE TABLE `users` (
   `phone` varchar(255) NOT NULL,
   `mail` varchar(255) NOT NULL,
   `city` varchar(255) NOT NULL,
-  `index` varchar(255) NOT NULL,
+  `postindex` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `session` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `mail` (`mail`),
+  UNIQUE KEY `session` (`session`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

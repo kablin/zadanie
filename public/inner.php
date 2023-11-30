@@ -1,13 +1,22 @@
 <?php
+
 require('user.php');
-use  User;
 
 
 
-$user = new User;
+if ($_POST['method'] === 'register') {
+    session_start();
+    session_regenerate_id() ;
 
-$user->registerUser();
+    $user = new User;
+    $error = $user->registerUser();
+    if ($error)
+    {
+       require ('error.php');
+       die;
 
+    }
+    header("Location: edit.php");
+    die();
 
-
-
+}

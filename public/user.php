@@ -23,37 +23,35 @@ class User
 
     private function findUserByMail($mail)
     {
-        if (!$this->connection_error) 
-        try {
+        if (!$this->connection_error)
+            try {
 
-            $select_query = $this->connection->prepare("SELECT * from users where mail = ?");
-            $select_query->execute([$mail]);
-            $select_query->setFetchMode(PDO::FETCH_ASSOC); 
-            return  $select_query->fetch();
-      
-        } catch (PDOException $e) {
-            return    null;
-        }
+                $select_query = $this->connection->prepare("SELECT * from users where mail = ?");
+                $select_query->execute([$mail]);
+                $select_query->setFetchMode(PDO::FETCH_ASSOC);
+                return  $select_query->fetch();
+            } catch (PDOException $e) {
+                return    null;
+            }
     }
 
 
 
     public function findUserBySession()
     {
-        if (!$this->connection_error) 
-        try {
-            $select_query = $this->connection->prepare("SELECT * from users where session = ?");
-            $select_query->execute([session_id()]);
-            $select_query->setFetchMode(PDO::FETCH_ASSOC); 
-            return  $select_query->fetch();
-      
-        } catch (PDOException $e) {
-            return    null;
-        }
+        if (!$this->connection_error)
+            try {
+                $select_query = $this->connection->prepare("SELECT * from users where session = ?");
+                $select_query->execute([session_id()]);
+                $select_query->setFetchMode(PDO::FETCH_ASSOC);
+                return  $select_query->fetch();
+            } catch (PDOException $e) {
+                return    null;
+            }
     }
 
 
-    
+
     public function registerUser()
     {
         if ($this->connection_error) return $this->connection_error;
@@ -61,9 +59,9 @@ class User
         $user = $this->findUserByMail($_POST['mail']);
         if ($user) return "Пользователь с такой почтой уже зарегистрирован";
         $data = array(
-            'username' => $_POST['username'], 'age' =>  $_POST['age'], 'phone' => $_POST['phone'],'mail' => $_POST['mail'],
-            'city' => $_POST['city'], 'postindex' => $_POST['postindex'], 'password' => password_hash($_POST['password'],PASSWORD_BCRYPT),
-            'session' =>session_id()
+            'username' => $_POST['username'], 'age' =>  $_POST['age'], 'phone' => $_POST['phone'], 'mail' => $_POST['mail'],
+            'city' => $_POST['city'], 'postindex' => $_POST['postindex'], 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT),
+            'session' => session_id()
         );
 
         try {
@@ -74,6 +72,46 @@ class User
             return null;
         } catch (PDOException $e) {
             return    $e->getMessage();
+        }
+    }
+
+
+    public function updateUser()
+    {
+        if ($this->connection_error) return $this->connection_error;
+
+        $user = $this->findUserBySession();
+        if ($user && ($user['id'] == $_POST['id'])) {
+            $data = array(
+                'id' => $_POST['id'], 'username' => $_POST['username'], 'age' =>  $_POST['age'], 'phone' => $_POST['phone'],
+                'city' => $_POST['city'], 'postindex' => $_POST['postindex'], 'password' => $_POST['password'] ? password_hash($_POST['password'], PASSWORD_BCRYPT) : $user['password'],
+            );
+
+            try {
+                $update_query = $this->connection->prepare("UPDATE users set username = :username, age = :age, phone = :phone,
+                city = :city, postindex = :postindex ,password = :password where id = :id");
+                $update_query->execute($data);
+                return null;
+            } catch (PDOException $e) {
+                return    $e->getMessage();
+            }
+        } else     return  'Сессия не найдена. Залогиньтесь';
+    }
+
+    public function logoutUser()
+    {
+        if ($this->connection_error) return $this->connection_error;
+        $user = $this->findUserBySession();
+        if ($user) {
+            $data = array('id' => $user['id'] );
+
+            try {
+                $update_query = $this->connection->prepare("UPDATE users set session = '' where id = :id");
+                $update_query->execute($data);
+                return null;
+            } catch (PDOException $e) {
+                return    $e->getMessage();
+            }
         }
     }
 }

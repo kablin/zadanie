@@ -4,14 +4,21 @@ require_once('header.php');
 ?>
 
 <div class="container">
+    <div class="container d-flex ">
+        <div class="alert alert-danger mx-auto d-none mt-5" id="alert-error" role="alert">
+        </div>
+    </div>
+
+    <div class="container d-flex">
+        <div class="alert alert-success mx-auto d-none  mt-5" id="alert-success" role="alert">
+        </div>
+    </div>
 
     <div class="card  mt-5">
-
         <div class="card-body">
 
-
-            <form id="register-form" action="inner.php" method="post" >
-                <input  name="method" type="hidden" value="register">
+            <form id="user-form" >
+                <input name="method" type="hidden" value="register">
                 <div class="form-group my-2">
                     <label for="username">Фио</label>
                     <input class="form-control" name="username" id="username" placeholder="Иванов Иван Иванович" required>
@@ -62,7 +69,7 @@ require_once('header.php');
                 </div>
 
                 <div class="form-group d-flex">
-                    <button onclick="testpasswords()" class="btn btn-primary mx-auto mt-4">Зарегистрироваться</button>
+                    <button onclick="testpasswords(true)" class="btn btn-primary mx-auto mt-4">Зарегистрироваться</button>
                 </div>
             </form>
 

@@ -1,6 +1,5 @@
 <?php
 require_once('header.php');
-
 ?>
 
 <div class="container">
@@ -15,9 +14,9 @@ require_once('header.php');
     </div>
 
     <div class="card  mt-5">
+        <h5 class="card-header">Регистрация </h5>
         <div class="card-body">
-
-            <form id="user-form" >
+            <form id="user-form">
                 <input name="method" type="hidden" value="register">
                 <div class="form-group my-2">
                     <label for="username">Фио</label>
@@ -69,7 +68,7 @@ require_once('header.php');
                 </div>
 
                 <div class="form-group d-flex">
-                    <button onclick="testpasswords(true)" class="btn btn-primary mx-auto mt-4">Зарегистрироваться</button>
+                    <button onclick="submitForm(true)" class="btn btn-primary mx-auto mt-4">Зарегистрироваться</button>
                 </div>
             </form>
 

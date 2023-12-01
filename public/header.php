@@ -3,9 +3,6 @@ session_start();
 require('user.php');
 $user = new User;
 $userdata = $user->findUserBySession();
-if ($userdata)
-$can_logout = true;
-
 ?>
 
 <html lang="en">
@@ -30,21 +27,22 @@ $can_logout = true;
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <?php if (isset($can_logout) && $can_logout) { ?>
+          <?php if ($userdata) { ?>
             <li class="nav-item">
               <a class="nav-link " onclick="logout()" aria-current="page" href="#">Выйти</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link " aria-current="page" href="edit.php">Пользователь</a>
+              <a class="nav-link " aria-current="page" href="edit.php"><?php echo  $userdata['username'] ?></a>
             </li>
           <?php } else {  ?>
             <li class="nav-item">
-              <a class="nav-link " aria-current="page" href="#">Войти</a>
+              <a class="nav-link " aria-current="page" href="login.php">Войти</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="register.php">Регистрация</a>
             </li>
           <?php } ?>
-          <li class="nav-item">
-            <a class="nav-link" href="register.php">Зарегистрироваться</a>
-          </li>
+
 
         </ul>
 

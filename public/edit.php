@@ -17,11 +17,20 @@ require_once('header.php');
 
     <?php if ($userdata) { ?>
         <div class="card  mt-5">
+            <div class="card-header d-flex">
+                <h5 class="">Личный кабинет </h5>
+                <div id="confirm" class="form-check ms-auto my-auto d-none">
+                    <input class="form-check-input" type="checkbox" value="" id="confirm-delete">
+                    <label class="form-check-label" for="confirm-delete">
+                        Подтвердить удаление
+                    </label>
+                </div>
+                <button onclick="deleteUser()" id="button-delete" class="btn btn-danger ms-auto">Удалить аккаунт</button>
+            </div>
             <div class="card-body">
-
                 <form id="user-form">
                     <input name="method" type="hidden" value="edit">
-                    <input name="id" type="hidden" value="<?php echo $userdata['id'] ?>">
+                    <input name="id" id="id" type="hidden" value="<?php echo $userdata['id'] ?>">
                     <div class="form-group my-2">
                         <label for="username">Фио</label>
                         <input class="form-control" name="username" value="<?php echo $userdata['username'] ?>" id="username" placeholder="Иванов Иван Иванович" required>
@@ -72,13 +81,26 @@ require_once('header.php');
                     </div>
 
                     <div class="form-group d-flex">
-                        <button onclick="testpasswords()" class="btn btn-primary mx-auto mt-4">Сохранить</button>
+                        <button onclick="submitForm()" class="btn btn-primary mx-auto mt-4">Сохранить</button>
                     </div>
                 </form>
-
             </div>
         </div>
 
+        <div class="card  mt-5">
+            <div class="card-header d-flex">
+                <h5 class="">Фотография</h5>
+                <button onclick="deleteAvatar()" id="button-delete" class="btn btn-danger ms-auto">Удалить фотографию</button>
+            </div>
+            <div class="card-body">
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="avatar" accept=".jpg,.png">
+                    <button class="btn btn-outline-secondary" onclick="saveAvatar()" type="button" >Загрузить фотографию</button>
+                </div>
+
+                <img id ="image" class="h-auto rounded-5 mx-auto  <?php if (!$userdata['photo']) echo 'd-none' ; ?>" src="files/<?php echo $userdata['photo']?>">                        </div>
+           
+        </div>
     <?php } ?>
 
 </div>
